@@ -1,0 +1,15 @@
+{
+  "name": "puppeteer",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6",
+    "csv-stringify": "^6.5.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.4.5",
+    "pg": "^8.11.5",
+    "puppeteer": "^22.9.0"
+  }
+}
