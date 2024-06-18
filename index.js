@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const { insertData } = require("./db");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 const csvWriter = createCsvWriter({
@@ -21,9 +22,7 @@ const crawler = async () => {
   try {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.goto(
-      "https://www.koreabaseball.com/Record/Player/Runner/Basic.aspx"
-    );
+    await page.goto("https://www.koreabaseball.com/Schedule/Schedule.aspx");
 
     const collectData = async () => {
       await page.waitForSelector(".tData01 tbody tr", { timeout: 10000 });
@@ -38,13 +37,19 @@ const crawler = async () => {
             rank: cells[0].innerText,
             player_name: cells[1].innerText,
             team_name: cells[2].innerText,
-            G: cells[3].innerText,
-            SBA: cells[4].innerText,
-            SB: cells[5].innerText,
-            CS: cells[6].innerText,
-            "SB%": cells[7].innerText,
-            OOB: cells[8].innerText,
-            PKO: cells[9].innerText,
+            AVG: cells[3].innerText,
+            G: cells[4].innerText,
+            PA: cells[5].innerText,
+            AB: cells[6].innerText,
+            R: cells[7].innerText,
+            H: cells[8].innerText,
+            "2B": cells[9].innerText,
+            "3B": cells[10].innerText,
+            HR: cells[11].innerText,
+            TB: cells[12].innerText,
+            RBI: cells[13].innerText,
+            SAC: cells[14].innerText,
+            SF: cells[15].innerText,
           };
         });
       });
@@ -53,7 +58,7 @@ const crawler = async () => {
     };
 
     let results = [];
-    let last = 5;
+    let last = 2;
 
     for (let i = 1; i <= last; i++) {
       console.log("페이지", i, ":");
@@ -90,14 +95,15 @@ const crawler = async () => {
           console.log("마지막 페이지입니다. 다음 페이지로 이동할 수 없습니다.");
         }
       } else {
-        // last = 3;
+        // last = 2;
       }
     }
 
     if (results.length > 0) {
-      const flattenedResults = results.flat();
-      await csvWriter.writeRecords(flattenedResults);
-      console.log("CSV 파일이 성공적으로 저장되었습니다.");
+      // const flattenedResults = results.flat();
+      // await csvWriter.writeRecords(flattenedResults);
+      // insertData(results);
+      console.log("성공적으로 저장되었습니다.");
     }
 
     await browser.close();
